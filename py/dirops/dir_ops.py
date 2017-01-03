@@ -63,14 +63,14 @@ def get_dir_list(args):
                 continue
     out_file.close()
 
-def match_dir_lists(args):
+def match_dir_copies(args):
     dir_list_file_golden_name = args[0]
     dir_list_file_test_name = args[1]
     golden_errors_file_name = args[2]
     test_errors_file_name = args[3]
     golden_only_file_name = args[4]
     test_only_file_name = args[5]
-    size_mismatches_file_name = args[6]
+    size_or_cksm_mismatches_file_name = args[6]
     name_matches_file_name = args[7]
 
     try:
@@ -108,12 +108,12 @@ def match_dir_lists(args):
         validate_file_or_dir(test_only_file_name, is_file=True, is_write=True)
         test_only_file = open(test_only_file_name, "w")
 
-        rename_msg = rename_file_on_overwrite(size_mismatches_file_name)
+        rename_msg = rename_file_on_overwrite(size_or_cksm_mismatches_file_name)
         if rename_msg is not None:
             print rename_msg
-        validate_file_or_dir(size_mismatches_file_name, is_file=True,
+        validate_file_or_dir(size_or_cksm_mismatches_file_name, is_file=True,
                              is_write=True)
-        size_mismatches_file = open(size_mismatches_file_name, "w")
+        size_or_cksm_mismatches_file = open(size_or_cksm_mismatches_file_name, "w")
 
         rename_msg = rename_file_on_overwrite(name_matches_file_name)
         if rename_msg is not None:
@@ -154,16 +154,16 @@ def match_dir_lists(args):
             name_matches_file.write(str(golden_dir_entry) + "\n")
             (golden_size, _, _, golden_cksm) = golden_dir_info[golden_dir_entry]
             (test_size, _, _, test_cksm) = test_dir_info[golden_dir_entry]
-            if golden_size != test_size:
-                size_mismatches_file.write("GOLDEN: " + str(golden_dir_entry) +
+            if golden_size != test_size or golden_cksm != test_cksm:
+                size_or_cksm_mismatches_file.write("GOLDEN: " + str(golden_dir_entry) +
                                            str(golden_dir_info[
                                                    golden_dir_entry]) + "\n")
-                size_mismatches_file.write("TEST: " + str(golden_dir_entry) +
+                size_or_cksm_mismatches_file.write("TEST: " + str(golden_dir_entry) +
                                            str(test_dir_info[
                                                    golden_dir_entry]) + "\n")
     golden_only_file.close()
     name_matches_file.close()
-    size_mismatches_file.close()
+    size_or_cksm_mismatches_file.close()
 
     for test_dir_entry in test_dir_info:
         if test_dir_entry not in golden_dir_info.keys():
@@ -508,34 +508,6 @@ def process_set_of_cloned_nodes(clone_index, clones_list, clone_skip_flags_list,
         
 
 
-def make_full_paths(args):
-    dir_path = args[0]
-    dir_list_file_name = args[1]
-    full_paths_list_file = args[2]
-
-    try:
-
-        validate_file_or_dir(dir_path, is_file=False, is_write=False)
-        validate_file_or_dir(dir_list_file_name, is_file=True, is_write=False)
-        dir_list_file = open(dir_list_file_name)
-
-        rename_msg = rename_file_on_overwrite(full_paths_list_file)
-        if rename_msg is not None:
-            print rename_msg
-        validate_file_or_dir(full_paths_list_file, is_file=True, is_write=True)
-        full_paths_list_file = open(full_paths_list_file, "w")
-
-    except IOError as err:
-        raise UsageError(str(err))
-
-    try:
-        update_to_full_paths(dir_path, dir_list_file, full_paths_list_file)
-
-    except IOError as err:
-        raise RuntimeError(str(err))
-
-    full_paths_list_file.close()
-
 def compare_dirs(args):
     dir1 = args[0]
     dir2 = args[1]
@@ -601,18 +573,6 @@ def remove_dups_based_on_cksms(left_path, left_list, right_path, right_list):
         left_list.remove(left_file)
         right_list.remove(right_file)
     return (left_list, right_list)
-
-def update_to_full_paths(dir_base, dir_file, full_paths_file):
-    line_number = 1
-    for line in dir_file:
-        (file_path, size, atime, mtime, md5_checksum) =\
-            read_dir_file_line(line, full_paths_file, line_number)
-        if file_path is None:
-            return
-        full_paths_file.write(os.path.join(dir_base, file_path) + " " +
-                              str(size) + " " + str(atime) + " " + str(mtime) +
-                              " " + md5_checksum + "\n")
-        line_number += 1
 
 def get_partial_dups(dir_file, dirs_with_dup_files, dirs_with_not_all_files_duped,
                      err_file):
@@ -781,12 +741,12 @@ def main():
 
     valid_args_list = [
         ("getdirlist", ["directory-to-scan", "out-file"], get_dir_list),
-        ("matchdirlists",
+        ("matchdircopies",
             ["directory-list-file-golden", "directory-list-file-test",
              "golden-errors-file", "test-errors-file",
              "golden-only-file", "test-only-file",
-             "size-mismatches-file", "name-matches-file"],
-         match_dir_lists),
+             "size-or-cksm_mismatches-file", "name-matches-file"],
+         match_dir_copies),
         ("updatefiletimes",
             ["directory-to-update", "directory-list-file-golden",
              "directory-list-file-test", "log-file"],
@@ -795,9 +755,6 @@ def main():
             ["directory-list-file", "...", "duplicates-list-file",
              "full-dup-dirs-list-file", "part-dup-dirs-list-file"],
          list_duplicate_files),
-        ("makefullpaths",
-            ["directory-path", "directory-list-file", "full-paths-list-file",],
-         make_full_paths),
         ("comparedirs",
             ["1st-dir", "2nd-dir", "output-file",],
          compare_dirs)

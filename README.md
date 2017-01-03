@@ -1,11 +1,13 @@
 # UNCHAOSS
 ## Directory Structure
-py : Python files
+android : Android files
+
+as: Assembly files
 
 c : C and C++ files
 
 js : HTML, CSS, and Javascript files
 
-as: Assembly files
+py : Python files
 
 v : Verilog files
