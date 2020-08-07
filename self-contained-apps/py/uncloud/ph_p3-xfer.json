@@ -1,0 +1,6 @@
+{
+  "device" : "ph_p3",
+  "link" : "android_sshelper",
+  "overrides" : { "ph_p3" : { "android_sshelper" : { "max_parallels" : 0 }}},
+  "commands" : [{"import" : null} ]
+}

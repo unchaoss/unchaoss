@@ -1,0 +1,6 @@
+{
+  "device" : "ph_m7",
+  "link" : "android_sshelper",
+  "overrides" : { "ph_m7" : { "android_sshelper" : { "max_parallels" : 0 }}},
+  "commands" : [{"import" : null} ]
+}

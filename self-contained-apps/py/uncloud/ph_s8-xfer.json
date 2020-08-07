@@ -1,0 +1,6 @@
+{
+  "device" : "ph_s8",
+  "link" : "android_sshelper",
+  "overrides" : { "ph_s8" : { "android_sshelper" : { "max_parallels" : 0 }}},
+  "commands" : [{"import" : null} ]
+}
