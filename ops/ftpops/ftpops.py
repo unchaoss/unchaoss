@@ -30,7 +30,7 @@ def Usage(valid_args_list):
         print "\t\t" + valid_args[0] + args_string
 
 
-class culldeslack:
+class palmio:
 
     def cli(self, args):
         valid_args_list = [
@@ -159,8 +159,8 @@ class culldeslack:
                     file_or_dir_name)
 
 def main():
-    cds = culldeslack()
-    cds.cli(sys.argv)
+    p_io = palmio()
+    p_io.cli(sys.argv)
 
 if __name__ == "__main__":
     main()

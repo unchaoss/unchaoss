@@ -17,6 +17,13 @@ try:
 except ImportError:
     flags = None
 
+def quick_test_blogger(service):
+    users = service.users()
+    thisuser = users.get(userId='self').execute()
+    print(str(users))
+    blogs = service.blogs()
+    print(str(blogs.listByUser(userId='self').execute()))
+
 def quick_test_drive(service):
     results = service.files().list(
         pageSize=10,fields="nextPageToken, files(id, name)").execute()
@@ -51,6 +58,8 @@ def main(argv):
     """
     drive_service = discovery.build('drive', 'v3', http=http)
     quick_test_drive(drive_service)
+    blogger_service = discovery.build('blogger', 'v3', http=http)
+    quick_test_blogger(blogger_service)
     googleops.release_credentials(id)
 
 if __name__ == '__main__':

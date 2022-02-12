@@ -2,6 +2,14 @@ __author__ = 'cbdasg'
 
 import json
 
+#=============================== REFERENCE INFO ====================================
+
+# APPS permissions URL https://myaccount.google.com/permissions?pli=1
+# API dashboard https://console.cloud.google.com/apis/dashboard
+# (Use the Credentials link from the sidebar to add/edit/remove projects)
+# List of scopes https://developers.google.com/identity/protocols/googlescopes
+
+
 #=============================== SINLGE KEY ENCRYPT/DECRYPT ====================================
 
 from Crypto.Cipher import AES
@@ -142,7 +150,7 @@ import json
 def encrypt_json(in_json_file, out_json_file, master_key, encrypt_keys_list):
     single_key_crypt_decrypt = singleKeCryptDecrypt(master_key)
     with open(in_json_file) as fd:
-        json_to_encrypt = json.load(fd)
+            json_to_encrypt = json.load(fd)
     for key_to_encrypt_expr in encrypt_keys_list:
         jsn = json_to_encrypt
         keys_list_to_encrypt = key_to_encrypt_expr.split("__")

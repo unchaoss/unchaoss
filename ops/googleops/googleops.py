@@ -10,12 +10,24 @@ from oauth2client import tools
 from oauth2client.file import Storage
 from googleapiclient import sample_tools
 
+import json
+
 sys.path.append(os.path.join(os.path.dirname(__file__),".."))
 from core import core, util
 
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/drive-python-quickstart.json
-SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly'
+SCOPES = [
+    'https://www.googleapis.com/auth/drive.metadata.readonly',
+    'https://www.googleapis.com/auth/blogger',
+    'https://www.googleapis.com/auth/calendar',
+    'https://www.googleapis.com/auth/drive',
+    'https://mail.google.com/',
+    'https://www.googleapis.com/auth/contacts',
+    'https://www.googleapis.com/auth/spreadsheets',
+    'https://www.googleapis.com/auth/photoslibrary',
+    'https://www.googleapis.com/auth/photoslibrary.sharing',
+    'https://www.googleapis.com/auth/blogger']
 ENCRYPTED_CLIENT_SECRET_FILE = os.path.join(core.get_credentials_base(), "unchaoss-encrypted-gsecret.json")
 CLIENT_SECRET_FILE = os.path.join(core.get_credentials_base(), "unchaoss-gsecret.json")
 APPLICATION_NAME = 'UNCHAOSS GOOGLE'
@@ -52,9 +64,9 @@ def get_credentials(master_key, flags = None):
         if flags:
             credentials = tools.run_flow(flow, store, flags)
         else: # Needed only for compatibility with Python 2.6
-            credentials = tools.run(flow, store)
+            credentials = tools.run_flow(flow, store)
         print('Storing credentials to ' + credentials_file)
-        util.encrypt_json(credentials_file, ENCRYPTED_CREDENTIALS_FILE, master_key, client_secret_file_encrypt_fields)
+        util.encrypt_json(credentials_file, ENCRYPTED_CREDENTIALS_FILE, master_key, credentials_file_encrypt_fields)
         if os.path.isfile(CLIENT_SECRET_FILE):
             os.remove(CLIENT_SECRET_FILE)
     return (credentials, id)

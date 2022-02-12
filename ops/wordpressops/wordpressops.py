@@ -49,6 +49,6 @@ payload_values_1 = {"oauth_consumer_key" : "zTOCIM1R772I" , "oauth_signature_met
 
 key = "qZurqPPfuD1yl4DEzAXj3cCyvLMWPblUWLeJprbJtHonHeRt&"
 
-send_request(key, signature_fields_1, request_fields_1, payload_values_1)++++
+send_request(key, signature_fields_1, request_fields_1, payload_values_1)
 
 

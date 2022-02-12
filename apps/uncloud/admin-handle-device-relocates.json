@@ -1,0 +1,6 @@
+{
+  "device" : "localhost",
+  "link" : "local_fs",
+  "overrides" : { "localhost" : { "local_fs" : { "max_parallels" : 0 }}},
+  "commands" : [{"admin" : {"handle_device_relocates" : {"dryrun" : null}} } ]
+}

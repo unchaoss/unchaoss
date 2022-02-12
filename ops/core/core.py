@@ -12,7 +12,7 @@ def get_credentials_base():
 
 # UNCHAOSS expects the same master key to be used on every run but does not save
 # the key itself as a security measure. The key must be externally provided
-# (entered by a user using getpass or a through a web page displayed by a
+# (eg using getpass to have it entered by the user or from a web page shown by a
 # locally running server). After entry, and as a precaution against typos,
 # there is a one time manual step where the master key is manually encrypted
 # using itself (i.e. the master key is# both the text to encrypt and the
@@ -31,4 +31,3 @@ def cross_check_master_key(candidate):
     if encrypted_msg != master_password_cross_check_value:
         return False
     return True
-
